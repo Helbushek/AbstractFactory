@@ -1,30 +1,27 @@
 #include <iostream>
-#include "Unit.h"
+#include "CodeGenerator.h"
 
-std::string generateProgram() {
-    ClassUnit myClass( "MyClass" );
-    myClass.add(
-        std::make_shared< MethodUnit >( "testFunc1", "void", 0 ),
-        ClassUnit::PUBLIC
-        );
-    myClass.add(
-        std::make_shared< MethodUnit >( "testFunc2", "void", MethodUnit::STATIC ),
-        ClassUnit::PRIVATE
-        );
-    myClass.add(
-        std::make_shared< MethodUnit >( "testFunc3", "void", MethodUnit::VIRTUAL |
-                                                              MethodUnit::CONST ),
-        ClassUnit::PUBLIC
-        );
-    auto method = std::make_shared< MethodUnit >( "testFunc4", "void",
-                                               MethodUnit::STATIC );
-    method->add( std::make_shared< PrintOperatorUnit >( R"(Hello, world!\n)" ) );
-    myClass.add( method, ClassUnit::PROTECTED );
-    return myClass.compile();
+void devide(int length, std::string name)
+{
+    for (int i = 0; i < length; ++i)
+    {
+        std::cout << "=";
+    }
+    std::cout << "\n" + name + " code: \n";
+    for (int i = 0; i < length; ++i)
+    {
+        std::cout << "=";
+    }
+    std::cout << "\n";
 }
 
 int main(int argc, char *argv[])
 {
-    std::cout << generateProgram() << std::endl;
+    devide(50, "C++");
+    std::cout << CppCodeGenerator::generateProgram() << std::endl;
+    devide(50, "C#");
+    std::cout << CsCodeGenerator::generateProgram() << std::endl;
+    devide(50, "Java");
+    std::cout << JavaCodeGenerator::generateProgram() << std::endl;
     return 0;
 }

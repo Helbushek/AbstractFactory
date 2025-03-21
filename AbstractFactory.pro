@@ -15,4 +15,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    CodeGenerator.h \
+    CppUnit.h \
+    CsUnit.h \
+    JavaUnit.h \
     Unit.h
