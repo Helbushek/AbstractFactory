@@ -11,12 +11,19 @@ class CodeGenerator
     Unit *myClass;
 
   public:
+    virtual ~CodeGenerator()
+    {
+        if (myClass != nullptr)
+        {
+            delete myClass;
+        }
+    }
     virtual std::string generateCode() = 0;
     virtual void generateProgram() = 0;
 
 };
 
-class CppCodeGenerator : CodeGenerator
+class CppCodeGenerator : public CodeGenerator
 {
   public:
     CppCodeGenerator(std::string className)
@@ -51,7 +58,7 @@ class CppCodeGenerator : CodeGenerator
     }
 };
 
-class CsCodeGenerator : CodeGenerator
+class CsCodeGenerator : public CodeGenerator
 {
   public:
     CsCodeGenerator(std::string className)
@@ -86,7 +93,7 @@ class CsCodeGenerator : CodeGenerator
     }
 };
 
-class JavaCodeGenerator : CodeGenerator
+class JavaCodeGenerator : public CodeGenerator
 {
   public:
     JavaCodeGenerator(std::string className)

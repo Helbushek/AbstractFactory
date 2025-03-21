@@ -1,4 +1,5 @@
 #include <iostream>
+#include "AbstractCodeGenerator.h"
 #include "CodeGenerator.h"
 
 void devide(int length, std::string name)
@@ -17,19 +18,26 @@ void devide(int length, std::string name)
 
 int main(int argc, char *argv[])
 {
+    AbstractCodeGenerator acg;
+    CodeGenerator *cpp = new CppCodeGenerator("MyClass");
+    CodeGenerator *cs = new CsCodeGenerator("MyClass");
+    CodeGenerator *java = new JavaCodeGenerator("MyClass");
+
+
     devide(50, "C++");
-    CppCodeGenerator cpp("MyClass");
-    cpp.generateProgram();
-    std::cout << cpp.generateCode();
+    acg.setCodeGenerator(cpp);
+    std::cout << acg.generate();
 
     devide(50, "C#");
-    CsCodeGenerator cs("MyClass");
-    cs.generateProgram();
-    std::cout << cs.generateCode();
+    acg.setCodeGenerator(cs);
+    std::cout << acg.generate();
 
     devide(50, "Java");
-    JavaCodeGenerator java("MyClass");
-    java.generateProgram();
-    std::cout << java.generateCode();
+    acg.setCodeGenerator(java);
+    std::cout << acg.generate();
+
+    delete cpp;
+    delete cs;
+    delete java;
     return 0;
 }
