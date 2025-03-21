@@ -18,10 +18,18 @@ void devide(int length, std::string name)
 int main(int argc, char *argv[])
 {
     devide(50, "C++");
-    std::cout << CppCodeGenerator::generateProgram() << std::endl;
+    CppCodeGenerator cpp("MyClass");
+    cpp.generateProgram();
+    std::cout << cpp.generateCode();
+
     devide(50, "C#");
-    std::cout << CsCodeGenerator::generateProgram() << std::endl;
+    CsCodeGenerator cs("MyClass");
+    cs.generateProgram();
+    std::cout << cs.generateCode();
+
     devide(50, "Java");
-    std::cout << JavaCodeGenerator::generateProgram() << std::endl;
+    JavaCodeGenerator java("MyClass");
+    java.generateProgram();
+    std::cout << java.generateCode();
     return 0;
 }

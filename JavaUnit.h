@@ -11,7 +11,7 @@ class JavaClassUnit : public Unit
         PRIVATE
     };
     static const std::vector<std::string> ACCESS_MODIFIERS;
-    bool isAbstract = false;
+    bool isAbstract = true;
 
   public:
     explicit JavaClassUnit(const std::string &name) : m_name(name)

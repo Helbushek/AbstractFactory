@@ -9,13 +9,13 @@ class CppClassUnit : public Unit
         PROTECTED,
         PRIVATE
     };
-    static const std::vector< std::string > ACCESS_MODIFIERS;
+    static const std::vector<std::string> ACCESS_MODIFIERS;
   public:
     explicit CppClassUnit( const std::string& name ) : m_name( name ) {
         m_fields.resize( ACCESS_MODIFIERS.size() );
     }
     void add( const std::shared_ptr< Unit >& unit, Flags flags ) {
-        int accessModifier = PRIVATE;
+        int accessModifier = CppClassUnit::PRIVATE;
         if( flags < ACCESS_MODIFIERS.size() ) {
             accessModifier = flags;
         }
@@ -42,15 +42,15 @@ class CppClassUnit : public Unit
     using Fields = std::vector< std::shared_ptr< Unit > >;
     std::vector< Fields > m_fields;
 };
-const std::vector< std::string > CppClassUnit::ACCESS_MODIFIERS = { "public",
-                                                              "protected", "private" };
+const std::vector<std::string> CppClassUnit::ACCESS_MODIFIERS = {"public", "protected", "private"};
 
 class CppMethodUnit : public Unit {
   public:
-    enum Modifier {
+    enum Modifier
+    {
         STATIC = 1,
         CONST = 1 << 1,
-        VIRTUAL = 1 << 2
+        VIRTUAL = 1 << 2,
     };
   public:
     CppMethodUnit( const std::string& name, const std::string& returnType, Flags flags) :
@@ -60,14 +60,14 @@ class CppMethodUnit : public Unit {
     }
     std::string compile( unsigned int level = 0 ) const {
         std::string result = generateShift( level );
-        if( m_flags & STATIC ) {
+        if( m_flags & CppMethodUnit::STATIC ) {
             result += "static ";
-        } else if( m_flags & VIRTUAL ) {
+        } else if( m_flags & CppMethodUnit::VIRTUAL ) {
             result += "virtual ";
         }
         result += m_returnType + " ";
         result += m_name + "()";
-        if( m_flags & CONST ) {
+        if( m_flags & CppMethodUnit::CONST ) {
             result += " const";
         }
         result += " {\n";

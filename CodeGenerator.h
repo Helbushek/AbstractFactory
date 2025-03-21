@@ -7,66 +7,116 @@
 
 class CodeGenerator
 {
+  protected:
+    Unit *myClass;
+
   public:
     virtual std::string generateCode() = 0;
+    virtual void generateProgram() = 0;
+
 };
 
 class CppCodeGenerator : CodeGenerator
 {
   public:
-    static std::string generateProgram()
+    CppCodeGenerator(std::string className)
     {
-        CppClassUnit myClass("MyClass");
-        myClass.add(std::make_shared<CppMethodUnit>("testFunc1", "void", 0), CppClassUnit::PUBLIC);
-        myClass.add(std::make_shared<CppMethodUnit>("testFunc2", "void", CppMethodUnit::STATIC), CppClassUnit::PRIVATE);
-        myClass.add(std::make_shared<CppMethodUnit>("testFunc3", "void", CppMethodUnit::VIRTUAL | CppMethodUnit::CONST),
-                    CppClassUnit::PUBLIC);
-        auto method = std::make_shared<CppMethodUnit>("testFunc4", "void", CppMethodUnit::STATIC);
-        method->add(std::make_shared<CppPrintOperatorUnit>(R"(Hello, world!\n)"));
-        myClass.add(method, CppClassUnit::PROTECTED);
-        return myClass.compile();
+        myClass = new CppClassUnit(className);
+    }
+    virtual std::shared_ptr<Unit> add(std::string name, std::string return_type, CppClassUnit::Flags flags,
+                                      CppClassUnit::AccessModifier mods = CppClassUnit::PRIVATE)
+    {
+        auto obj = std::make_shared<CppMethodUnit>(name, return_type, flags);
+        myClass->add(obj, mods);
+        return obj;
+    }
+
+    virtual std::shared_ptr<Unit> addPrintToChild(std::shared_ptr<Unit> child, std::string text) {
+        auto obj = std::make_shared<CppPrintOperatorUnit>(text);
+        child->add(obj, 0);
+        return obj;
+    }
+
+    std::string generateCode()
+    {
+        return myClass->compile();
+    }
+
+    void generateProgram() {
+        add("testFunc1", "void", 0, CppClassUnit::PUBLIC);
+        add("testFunc2", "void", CppMethodUnit::STATIC, CppClassUnit::PRIVATE);
+        add("testFunc3", "void", CppMethodUnit::VIRTUAL | CppMethodUnit::CONST, CppClassUnit::PUBLIC);
+        auto method1 = add("testFunc4", "void", CppMethodUnit::STATIC, CppClassUnit::PROTECTED);
+        addPrintToChild(method1, R"(Hello, world!\n)");
     }
 };
 
 class CsCodeGenerator : CodeGenerator
 {
   public:
-    static std::string generateProgram()
+    CsCodeGenerator(std::string className)
     {
-        CsClassUnit myClass("MyClass");
-        myClass.add(std::make_shared<CsMethodUnit>("testFunc1", "void", 0), CsClassUnit::PUBLIC);
-        myClass.add(std::make_shared<CsMethodUnit>("testFunc2", "void", CsMethodUnit::STATIC), CsClassUnit::PRIVATE);
-        myClass.add(std::make_shared<CsMethodUnit>("testFunc3", "void", CsMethodUnit::VIRTUAL), CsClassUnit::PUBLIC);
-        auto method = std::make_shared<CsMethodUnit>("testFunc4", "void", CsMethodUnit::STATIC);
-        method->add(std::make_shared<CsPrintOperatorUnit>(R"(Hello, world!\n)"));
-        myClass.add(method, CsClassUnit::PROTECTED);
-        return myClass.compile();
+        myClass = new CsClassUnit(className);
+    }
+    virtual std::shared_ptr<Unit> add(std::string name, std::string return_type, CsClassUnit::Flags flags,
+                                      CsClassUnit::AccessModifier mods = CsClassUnit::PRIVATE)
+    {
+        auto obj = std::make_shared<CsMethodUnit>(name, return_type, flags);
+        myClass->add(obj, mods);
+        return obj;
+    }
+
+    virtual std::shared_ptr<Unit> addPrintToChild(std::shared_ptr<Unit> child, std::string text) {
+        auto obj = std::make_shared<CsPrintOperatorUnit>(text);
+        child->add(obj, 0);
+        return obj;
+    }
+
+    std::string generateCode()
+    {
+        return myClass->compile();
+    }
+
+    void generateProgram() {
+        add("testFunc1", "void", 0, CsClassUnit::PUBLIC);
+        add("testFunc2", "void", CsMethodUnit::STATIC, CsClassUnit::PRIVATE);
+        add("testFunc3", "void", CsMethodUnit::VIRTUAL, CsClassUnit::PUBLIC);
+        auto method2 = add("testFunc4", "void", CsMethodUnit::STATIC, CsClassUnit::PROTECTED);
+        addPrintToChild(method2, R"(Hello, world!\n)");
     }
 };
 
 class JavaCodeGenerator : CodeGenerator
 {
   public:
-    static std::string generateProgram()
+    JavaCodeGenerator(std::string className)
     {
-        JavaClassUnit myClass("MyClass");
-        myClass.isAbstract = false;
-        myClass.add(
-            std::make_shared< JavaMethodUnit >( "testFunc1", "void", 0 ),
-            JavaClassUnit::PUBLIC
-            );
-        myClass.add(
-            std::make_shared< JavaMethodUnit >( "testFunc2", "void", JavaMethodUnit::STATIC ),
-            JavaClassUnit::PUBLIC
-            );
-        myClass.add(
-            std::make_shared< JavaMethodUnit >( "testFunc3", "void", JavaMethodUnit::FINAL ),
-            JavaClassUnit::PUBLIC
-            );
-        auto method = std::make_shared< JavaMethodUnit >( "testFunc4", "void",
-                                                     JavaMethodUnit::STATIC );
-        method->add( std::make_shared< JavaPrintOperatorUnit >( R"(Hello, world!\n)" ) );
-        myClass.add( method, JavaClassUnit::PROTECTED );
-        return myClass.compile();
+        myClass = new JavaClassUnit(className);
+    }
+    virtual std::shared_ptr<Unit> add(std::string name, std::string return_type, JavaClassUnit::Flags flags,
+                                      JavaClassUnit::AccessModifier mods = JavaClassUnit::PRIVATE)
+    {
+        auto obj = std::make_shared<JavaMethodUnit>(name, return_type, flags);
+        myClass->add(obj, mods);
+        return obj;
+    }
+
+    virtual std::shared_ptr<Unit> addPrintToChild(std::shared_ptr<Unit> child, std::string text) {
+        auto obj = std::make_shared<JavaPrintOperatorUnit>(text);
+        child->add(obj, 0);
+        return obj;
+    }
+
+    std::string generateCode() {
+        return myClass->compile();
+    }
+
+    void generateProgram()
+    {
+        add("testFunc1", "void", 0, JavaClassUnit::PUBLIC);
+        add("testFunc2", "void", JavaMethodUnit::STATIC, JavaClassUnit::PUBLIC);
+        add("testFunc3", "void", JavaMethodUnit::ABSTRACT, JavaClassUnit::PUBLIC);
+        auto method = add("testFunc4", "void", JavaMethodUnit::STATIC, JavaClassUnit::PROTECTED);
+        addPrintToChild(method, R"(Hello, world!\n)");
     }
 };
