@@ -4,24 +4,19 @@
 class AbstractCodeGenerator
 {
   private:
-    CodeGenerator *generator;
+    std::shared_ptr<CodeGenerator> generator;
+    AbstractCodeGenerator(){};
+    AbstractCodeGenerator &operator=(AbstractCodeGenerator &other) = delete;
+    AbstractCodeGenerator(AbstractCodeGenerator &other) = delete;
 
   public:
-    AbstractCodeGenerator()
+    static AbstractCodeGenerator &Instance()
     {
+        static AbstractCodeGenerator instance;
+        return instance;
     }
-    AbstractCodeGenerator(CodeGenerator *generator)
-    {
-        setCodeGenerator(generator);
-    }
-    ~AbstractCodeGenerator()
-    {
-        if (generator != nullptr)
-        {
-            delete generator;
-        }
-    }
-    void setCodeGenerator(CodeGenerator *generator)
+
+    void setCodeGenerator(std::shared_ptr<CodeGenerator>& generator)
     {
         this->generator = generator;
     }

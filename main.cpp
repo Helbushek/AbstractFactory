@@ -18,10 +18,10 @@ void devide(int length, std::string name)
 
 int main(int argc, char *argv[])
 {
-    AbstractCodeGenerator acg;
-    CodeGenerator *cpp = new CppCodeGenerator("MyClass");
-    CodeGenerator *cs = new CsCodeGenerator("MyClass");
-    CodeGenerator *java = new JavaCodeGenerator("MyClass");
+    AbstractCodeGenerator& acg = AbstractCodeGenerator::Instance();
+    std::shared_ptr<CodeGenerator> cpp = std::make_shared<CppCodeGenerator>("MyClass");
+    std::shared_ptr<CodeGenerator> cs = std::make_shared<CsCodeGenerator>("MyClass");
+    std::shared_ptr<CodeGenerator> java = std::make_shared<JavaCodeGenerator>("MyClass");
 
 
     devide(50, "C++");
@@ -36,8 +36,5 @@ int main(int argc, char *argv[])
     acg.setCodeGenerator(java);
     std::cout << acg.generate();
 
-    delete cpp;
-    delete cs;
-    delete java;
     return 0;
 }
